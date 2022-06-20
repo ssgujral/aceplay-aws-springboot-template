@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import tech.makers.aceplay.track.Track;
 import tech.makers.aceplay.track.TrackRepository;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -20,6 +21,16 @@ public class PlaylistsController {
     return playlistRepository.findAll();
   }
 
+  @GetMapping("/api/playlists/cool")
+  public Iterable<Playlist> coolPlaylists() {
+    return playlistRepository.findByIsCool(true);
+  }
+
+  @GetMapping("/api/playlists/uncool")
+  public Iterable<Playlist> uncoolPlaylists() {
+    return playlistRepository.findByIsCool(false);
+  }
+
   @PostMapping("/api/playlists")
   public Playlist create(@RequestBody Playlist playlist) {
     return playlistRepository.save(playlist);
@@ -30,6 +41,8 @@ public class PlaylistsController {
     return playlistRepository.findById(id)
         .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "No playlist exists with id " + id));
   }
+
+
 
   @PutMapping("/api/playlists/{id}/tracks")
   public Track addTrack(@PathVariable Long id, @RequestBody TrackIdentifierDto trackIdentifierDto) {
