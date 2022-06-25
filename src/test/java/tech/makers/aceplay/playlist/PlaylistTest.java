@@ -5,6 +5,7 @@ import tech.makers.aceplay.playlist.Playlist;
 
 import java.net.MalformedURLException;
 import java.util.Set;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -12,17 +13,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class PlaylistTest {
   @Test
   void testConstructs() {
-    Playlist subject = new Playlist("Hello, world!", false, Set.of());
+    Playlist subject = new Playlist("Hello, world!", false, List.of());
+    
     assertEquals("Hello, world!", subject.getName());
-    assertEquals(Set.of(), subject.getTracks());
+
+    assertEquals(List.of(), subject.getTracks());
+    
     assertEquals(null, subject.getId());
+
   }
 
   @Test
   void testToString() {
     Playlist subject = new Playlist("Hello, world!", false);
     assertEquals(
-        "Playlist[id=null name='Hello, world!']",
+        "Playlist[id=null name='Hello, world!' cool='false']",
         subject.toString());
   }
 }

@@ -21,8 +21,8 @@ public class UsersController {
   private PasswordEncoder passwordEncoder;
 
   @PostMapping("/api/users")
-  public Session create(@RequestBody User user) {
-    user = new User(user.getUsername(), passwordEncoder.encode(user.getPassword()));
+  public Session create(@RequestBody UserDto userDto) {
+    User user = new User(userDto.getUsername(), passwordEncoder.encode(userDto.getPassword()));
     userRepository.save(user);
     String token = sessionService.generateToken(user.getUsername());
     return new Session(user, token);

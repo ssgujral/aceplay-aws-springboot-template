@@ -2,12 +2,11 @@ package tech.makers.aceplay.playlist;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import tech.makers.aceplay.track.Track;
+import tech.makers.aceplay.user.User;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
-import java.util.Set;
+import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
 // https://www.youtube.com/watch?v=vreyOZxdb5Y&t=448s
 @Entity
@@ -16,24 +15,37 @@ public class Playlist {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
-  @NotBlank(message = "Blank playlist names are not permitted.")
+  @NotEmpty(message = "Name may not be empty")
   private String name;
 
-  private Boolean isCool;
+  private Boolean cool;
 
   @ManyToMany(fetch = FetchType.EAGER)
-  private Set<Track> tracks;
+  private List<Track> tracks;
 
-  public Playlist() {}
+  @OneToOne(cascade = CascadeType.PERSIST)
+  @JoinColumn(name = "user_id", referencedColumnName = "id")
+  private User user;
 
-  public Playlist(String name, Boolean isCool) {
+  public void setUser(User user) {
+    this.user = user;
+  }
+
+  public Playlist() {
+  }
+
+  public Playlist(@NotEmpty String name) {
+    this(name, false);
+  }
+
+  public Playlist(@NotEmpty String name, Boolean isCool) {
     this(name, isCool, null);
   }
 
-  public Playlist(String name, Boolean isCool, Set<Track> tracks) {
+  public Playlist(@NotEmpty String name, Boolean isCool, List<Track> tracks) {
     this.name = name;
     this.tracks = tracks;
-    this.isCool = isCool;
+    this.cool = isCool;
   }
 
   public String getName() {
@@ -44,12 +56,8 @@ public class Playlist {
     this.name = name;
   }
 
-  public Boolean getIsCool(){
-    return isCool;
-  }
-
-  public void setCool(Boolean isCool){
-    this.isCool = isCool;
+  public Boolean getCool() {
+    return cool;
   }
 
   public Long getId() {
@@ -57,15 +65,15 @@ public class Playlist {
   }
 
   @JsonGetter("tracks")
-  public Set<Track> getTracks() {
+  public List<Track> getTracks() {
     if (null == tracks) {
-      return Set.of();
+      return List.of();
     }
     return tracks;
   }
 
   @Override
   public String toString() {
-    return String.format("Playlist[id=%d name='%s']", id, name);
+    return String.format("Playlist[id=%d name='%s' cool='%s']", id, name, cool);
   }
 }

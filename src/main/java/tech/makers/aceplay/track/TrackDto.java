@@ -6,9 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import javax.validation.constraints.NotEmpty;
 
-// https://www.youtube.com/watch?v=5r3QU09v7ig&t=2999s
-@Entity
-public class Track {
+public class TrackDto {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
@@ -21,26 +19,17 @@ public class Track {
 
   private URL publicUrl;
 
-  @OneToOne(cascade = CascadeType.PERSIST)
-  @JoinColumn(name = "user_id", referencedColumnName = "id")
-  private User user;
-
-  public Track() {
+  public TrackDto() {
   }
 
-  public Track(@NotEmpty String title, @NotEmpty String artist, URL publicUrl) {
+  public TrackDto(@NotEmpty String title, @NotEmpty String artist, URL publicUrl) {
     this.title = title;
     this.artist = artist;
     this.publicUrl = publicUrl;
   }
 
-  public Track(@NotEmpty String title, @NotEmpty String artist, String publicUrl) throws MalformedURLException {
+  public TrackDto(@NotEmpty String title, @NotEmpty String artist, String publicUrl) throws MalformedURLException {
     this(title, artist, new URL(publicUrl));
-  }
-
-  public String toString() {
-    return String.format(
-        "Track[id=%d title='%s' artist='%s' publicUrl='%s']", id, title, artist, publicUrl);
   }
 
   public Long getId() {
@@ -73,9 +62,5 @@ public class Track {
 
   public void setPublicUrl(URL publicUrl) {
     this.publicUrl = publicUrl;
-  }
-
-  public void setUser(User user) {
-    this.user = user;
   }
 }
